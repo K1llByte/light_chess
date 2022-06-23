@@ -2,16 +2,23 @@
 
 #include "piece_moves.hpp"
 
-bool contains_move(
+std::optional<lc::Move> get_move(
     const std::vector<lc::Move>& moves,
     const lc::Position& to)
 {
     for(const auto& move : moves) {
         if(to == move.to()) {
-            return true;
+            return move;
         }
     }
-    return false;
+    return std::nullopt;
+}
+
+void apply_move(lc::Board& board, const std::optional<lc::Move>& move_opt) {
+    // if(move_opt.has_value()) {
+    //     move_opt->
+    // }
+
 }
 
 namespace lc {
@@ -41,31 +48,54 @@ namespace lc {
         // TODO: check turn color
         switch (piece.kind()) {
             case PAWN: {
-                auto possible_moves = pawn_moves(board, piece, from);
-                return contains_move(possible_moves, to);
+                
+                auto last_move = move_history.empty()
+                    	? std::nullopt
+                        : static_cast<std::optional<Move>>(move_history.back());
+                auto possible_moves = pawn_moves(board, piece, from, last_move);
+                auto move_opt = get_move(possible_moves, to);
+                apply_move(board, move_opt);
+
+                return move_opt.has_value();
             }
             case KNIGHT: {
                 auto possible_moves = knight_moves(board, piece, from);
-                return contains_move(possible_moves, to);
+                auto move_opt = get_move(possible_moves, to);
+                apply_move(board, move_opt);
+
+                return move_opt.has_value();
             }
             case BISHOP: {
                 auto possible_moves = bishop_moves(board, piece, from);
-                return contains_move(possible_moves, to);
+                auto move_opt = get_move(possible_moves, to);
+                apply_move(board, move_opt);
+
+                return move_opt.has_value();
             }
             case ROOK: {
                 auto possible_moves = rook_moves(board, piece, from);
-                return contains_move(possible_moves, to);
+                auto move_opt = get_move(possible_moves, to);
+                apply_move(board, move_opt);
+
+                return move_opt.has_value();
             }
             case QUEEN: {
                 auto possible_moves = queen_moves(board, piece, from);
-                return contains_move(possible_moves, to);
+                auto move_opt = get_move(possible_moves, to);
+                apply_move(board, move_opt);
+
+                return move_opt.has_value();
             }
             case KING: {
                 auto possible_moves = king_moves(board, piece, from);
-                return contains_move(possible_moves, to);
+                auto move_opt = get_move(possible_moves, to);
+                apply_move(board, move_opt);
+
+                return move_opt.has_value();
             }
         }
         // In case piece is None or move is invalid
+        fmt::print("ENd\n");
         return false;
     }
 }

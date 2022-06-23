@@ -12,8 +12,6 @@
 #define BLACK_KING_MOVED_BIT       0b010000
 #define BLACK_LONG_ROOK_MOVED_BIT  0b100000
 
-#define IN_BOUNDS(x) (0 <= x) && (x < 8)
-
 namespace lc {
     class ChessGame {   
         private:

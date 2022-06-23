@@ -1,4 +1,7 @@
 {
+    files = {
+        [[src\main.cpp]]
+    },
     depfiles_cl_json = "{\
     \"Version\": \"1.1\",\
     \"Data\": {\
@@ -114,8 +117,5 @@
             "-external:W0",
             [[-external:IC:\Users\KillByte\AppData\Local\.xmake\packages\f\fmt\8.1.1\3c4518782925487388553bdb3459c51d\include]]
         }
-    },
-    files = {
-        [[src\main.cpp]]
     }
 }

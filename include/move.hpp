@@ -8,10 +8,13 @@ namespace lc {
     class Move {
         private:
         // Can capture
-        struct Normal {};
+        struct Normal {
+            Piece capture;
+        };
         // Can capture
         struct Promotion {
             Piece to;
+            Piece capture;
         };
         struct Rook {};
         // Is capture (opponent pawn)
@@ -29,13 +32,13 @@ namespace lc {
         MoveKind kind;
 
         public:
-        static constexpr Move normal(Position&& from, Position&& to);
-        static constexpr Move promotion(Position&& from, Position&& to, const Piece& promotion);
+        static constexpr Move normal(Position&& from, Position&& to, Piece capture = NONE);
+        static constexpr Move promotion(Position&& from, Position&& to, const Piece& promotion, Piece capture = NONE);
         static constexpr Move rook(Position&& from, Position&& to);
         static constexpr Move en_passant(Position&& from, Position&& to);
 
-        static constexpr Move normal(const Position& from, const Position& to);
-        static constexpr Move promotion(const Position& from, const Position& to, const Piece& promotion);
+        static constexpr Move normal(const Position& from, const Position& to, Piece capture = NONE);
+        static constexpr Move promotion(const Position& from, const Position& to, const Piece& promotion, Piece capture = NONE);
         static constexpr Move rook(const Position& from, const Position& to);
         static constexpr Move en_passant(const Position& from, const Position& to);
 
@@ -57,19 +60,19 @@ namespace lc {
 /////////////// Implementation ///////////////
 
 namespace lc {
-    constexpr Move Move::normal(Position&& from, Position&& to) {
+    constexpr Move Move::normal(Position&& from, Position&& to, Piece capture) {
         return Move(
             std::forward<Position>(from),
             std::forward<Position>(to),
-            Move::Normal{}
+            Move::Normal{capture}
         );
     }
 
-    constexpr Move Move::promotion(Position&& from, Position&& to, const Piece& promotion) {
+    constexpr Move Move::promotion(Position&& from, Position&& to, const Piece& promotion, Piece capture) {
         return Move(
             std::forward<Position>(from),
             std::forward<Position>(to),
-            Move::Promotion{promotion}
+            Move::Promotion{promotion, capture}
         );
     }
 
@@ -90,19 +93,19 @@ namespace lc {
     }
 
 
-    constexpr Move Move::normal(const Position& from, const Position& to) {
+    constexpr Move Move::normal(const Position& from, const Position& to, Piece capture) {
         return Move(
             from,
             to,
-            Move::Normal{}
+            Move::Normal{capture}
         );
     }
 
-    constexpr Move Move::promotion(const Position& from, const Position& to, const Piece& promotion) {
+    constexpr Move Move::promotion(const Position& from, const Position& to, const Piece& promotion, Piece capture) {
         return Move(
             from,
             to,
-            Move::Promotion{promotion}
+            Move::Promotion{promotion, capture}
         );
     }
 

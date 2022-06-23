@@ -27,6 +27,9 @@ namespace lc {
         constexpr uint8_t color() const { return data & COLOR_MASK; }
         constexpr uint8_t kind() const { return data & VALUE_MASK; }
         constexpr uint8_t raw() const { return data; }
+
+        constexpr bool is_white() const { return color() == WHITE; }
+        constexpr bool is_black() const { return color() == BLACK; }
     };
 
     using Color = uint8_t;
