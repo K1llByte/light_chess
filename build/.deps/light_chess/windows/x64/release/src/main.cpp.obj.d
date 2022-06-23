@@ -1,21 +1,4 @@
 {
-    values = {
-        [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.31.31103\bin\HostX64\x64\cl.exe]],
-        {
-            "/EHsc",
-            "-nologo",
-            "-W4",
-            "-Ox",
-            "-fp:fast",
-            "-std:c++20",
-            "-Iinclude",
-            "-external:W0",
-            [[-external:IC:\Users\KillByte\AppData\Local\.xmake\packages\f\fmt\8.1.1\3c4518782925487388553bdb3459c51d\include]]
-        }
-    },
-    files = {
-        [[src\main.cpp]]
-    },
     depfiles_cl_json = "{\
     \"Version\": \"1.1\",\
     \"Data\": {\
@@ -107,10 +90,32 @@
             \"c:\\\\users\\\\killbyte\\\\desktop\\\\documents\\\\light_chess\\\\include\\\\piece.hpp\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.31.31103\\\\include\\\\array\",\
             \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.31.31103\\\\include\\\\cassert\",\
-            \"c:\\\\program files (x86)\\\\windows kits\\\\10\\\\include\\\\10.0.19041.0\\\\ucrt\\\\assert.h\"\
+            \"c:\\\\program files (x86)\\\\windows kits\\\\10\\\\include\\\\10.0.19041.0\\\\ucrt\\\\assert.h\",\
+            \"c:\\\\users\\\\killbyte\\\\desktop\\\\documents\\\\light_chess\\\\include\\\\game.hpp\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.31.31103\\\\include\\\\vector\",\
+            \"c:\\\\users\\\\killbyte\\\\desktop\\\\documents\\\\light_chess\\\\include\\\\move.hpp\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.31.31103\\\\include\\\\variant\",\
+            \"c:\\\\program files (x86)\\\\microsoft visual studio\\\\2022\\\\buildtools\\\\vc\\\\tools\\\\msvc\\\\14.31.31103\\\\include\\\\xsmf_control.h\"\
         ],\
         \"ImportedModules\": [],\
         \"ImportedHeaderUnits\": []\
     }\
-}"
+}",
+    values = {
+        [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.31.31103\bin\HostX64\x64\cl.exe]],
+        {
+            "/EHsc",
+            "-nologo",
+            "-W4",
+            "-Ox",
+            "-fp:fast",
+            "-std:c++20",
+            "-Iinclude",
+            "-external:W0",
+            [[-external:IC:\Users\KillByte\AppData\Local\.xmake\packages\f\fmt\8.1.1\3c4518782925487388553bdb3459c51d\include]]
+        }
+    },
+    files = {
+        [[src\main.cpp]]
+    }
 }

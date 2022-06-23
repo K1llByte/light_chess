@@ -26,5 +26,14 @@ namespace lc {
 
         constexpr uint8_t color() const { return data & COLOR_MASK; }
         constexpr uint8_t kind() const { return data & VALUE_MASK; }
+        constexpr uint8_t raw() const { return data; }
     };
+
+    using Color = uint8_t;
+    constexpr Piece pawn(Color c)   { return PAWN   | c; }
+    constexpr Piece knight(Color c) { return KNIGHT | c; }
+    constexpr Piece bishop(Color c) { return BISHOP | c; }
+    constexpr Piece rook(Color c)   { return ROOK   | c; }
+    constexpr Piece queen(Color c)  { return QUEEN  | c; }
+    constexpr Piece king(Color c)   { return KING   | c; }
 }

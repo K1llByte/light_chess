@@ -1,16 +1,17 @@
 #include <fmt/core.h>
 
 #include "board.hpp"
+#include "game.hpp"
 
 void board_render(const lc::Board& b) {
     static const char repr[7] = { ' ', 'p', 'k', 'b', 'R', 'Q', 'K' };
-    for(size_t i = 0 ; i < 8 ; ++i)
+    for(uint8_t i = 0 ; i < 8 ; ++i)
     {
         fmt::print("   +---+---+---+---+---+---+---+---+\n");
         fmt::print(" {} ", 8 - i);
-        for(size_t j = 0 ; j < 8 ; ++j)
+        for(uint8_t j = 0 ; j < 8 ; ++j)
         {
-            const lc::Piece tmp = b.at(j,i);
+            const lc::Piece tmp = b.at({j,i});
             #ifdef NUMBERS_REPRESENTATION
                 if(!tmp)
                     fmt::print("| {} ", int(tmp));
@@ -39,16 +40,23 @@ void board_render(const lc::Board& b) {
 int main() {
     using namespace lc;
     auto board1 = Board::standard();
-    auto board2 = Board({
-        0x0c0a0b0e0d0b0a0c,
-        0x0909090909090909,
-        0x0000000000000000,
-        0x0000000000000000,
-        0x0000000000000000,
-        0x0000000000000000,
-        0x0101010101010101,
-        0x0402030605030204
-    });
+    // auto board2 = Board({
+    //     0x0c0a0b0e0d0b0a0c,
+    //     0x0909090909090909,
+    //     0x0000000000000000,
+    //     0x0000000000000000,
+    //     0x0000000000000000,
+    //     0x0000000000000000,
+    //     0x0101010101010101,
+    //     0x0402030605030204
+    // });
+    // auto board3 = Board::empty();
 
-    board_render(board2);
+    // board1.set({3,3}, pawn(BLACK));
+
+    auto game = ChessGame(board1);
+    // e2 to e4
+    fmt::print("{}\n", game.move({4,6}, {4,4}));
+
+    board_render(board1);
 }

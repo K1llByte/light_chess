@@ -6,6 +6,8 @@
 #include <cassert>
 
 namespace lc {
+    using Position = std::array<uint8_t,2>;
+
     class Board {
         private:
         std::array<uint64_t,8> board_data;
@@ -16,7 +18,8 @@ namespace lc {
         static constexpr Board standard();
         static constexpr Board empty();
 
-        constexpr Piece at(size_t x, size_t y) const;
+        constexpr Piece at(const Position&) const;
+        constexpr void set(const Position&, const Piece&);
 
         constexpr bool operator==(const Board& other) {
             for(size_t i = 0; i < 8; ++i)
@@ -58,9 +61,23 @@ namespace lc {
         return Board(data);
     }
 
-    constexpr Piece Board::at(size_t x, size_t y) const {
-        // TODO: Bound check error handling
-        assert(x < 8 && y < 8);
-        return Piece((board_data[y] >> (x*8)) & 0xff);
+    constexpr Piece Board::at(const Position& pos) const {
+        // TODO: Bounds check error handling
+        assert(pos[0] < 8 && pos[1] < 8);
+        return Piece((board_data[pos[1]] >> (pos[0]*8)) & 0xff);
+    }
+    
+    constexpr void Board::set(const Position& pos, const Piece& piece) {
+        // TODO: Bounds check error handling
+        assert(pos[0] < 8 && pos[1] < 8);
+        // Impl 1: Faster
+        uint64_t mask = ~(0xff << (pos[0]*8));
+        board_data[pos[1]] &= mask;
+        board_data[pos[1]] |= (piece.raw() << (pos[0]*8));
+        
+        // Impl 2:
+        // auto sub = board_data[pos[1]] >> (pos[0]*8);
+        // board_data[pos[1]] -= sub;
+        // board_data[pos[1]] += (piece.raw() << (pos[0]*8));
     }
 }
