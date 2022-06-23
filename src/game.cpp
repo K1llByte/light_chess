@@ -15,9 +15,53 @@ std::optional<lc::Move> get_move(
 }
 
 void apply_move(lc::Board& board, const std::optional<lc::Move>& move_opt) {
-    // if(move_opt.has_value()) {
-    //     move_opt->
-    // }
+    if(move_opt.has_value()) {
+        auto move = *move_opt;
+        move.visit(
+            [&](lc::Move::Normal arg) {
+                board.set(move.to(), board.at(move.from()));
+                board.set(move.from(), arg.capture);
+            },
+            [&](lc::Move::Promotion arg) {
+                board.set(move.to(), arg.to);
+                board.set(move.from(), arg.capture);
+            },
+            [&](lc::Move::Rook arg) {
+                board.set(move.to(), board.at(move.from()));
+                board.set(move.from(), NONE);
+                // White kingside castling
+                // White queenside castling
+                // Black kingside castling
+                // Black queenside castling
+                if(move.to() == lc::Position{6,7}) {
+                    const lc::Position rook_pos = {7,7};
+                    board.set(lc::Position{5,7}, board.at(rook_pos));
+                    board.set(rook_pos, NONE);
+                }
+                else if(move.to() == lc::Position{6,7}) {
+                    const lc::Position rook_pos = {0,7};
+                    board.set(lc::Position{3,7}, board.at(rook_pos));
+                    board.set(rook_pos, NONE);
+                }
+                else if(move.to() == lc::Position{6,7}) {
+                    const lc::Position rook_pos = {7,0};
+                    board.set(lc::Position{5,0}, board.at(rook_pos));
+                    board.set(rook_pos, NONE);
+                }
+                else if(move.to() == lc::Position{6,7}) {
+                    const lc::Position rook_pos = {0,0};
+                    board.set(lc::Position{3,0}, board.at(rook_pos));
+                    board.set(rook_pos, NONE);
+                }
+            },
+            [&](lc::Move::EnPassant arg) {
+                // Right En Passant
+                board.set(move.to(), board.at(move.from()));
+                board.set(move.from(), NONE);
+                board.set({move.to()[0],move.from()[1]}, NONE);
+            }
+        );
+    }
 
 }
 

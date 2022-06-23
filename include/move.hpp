@@ -4,9 +4,14 @@
 
 #include "board.hpp"
 
+// Helper type for visitor
+template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
+// Explicit deduction guide (not needed as of C++20)
+template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
+
 namespace lc {
     class Move {
-        private:
+        public:
         // Can capture
         struct Normal {
             Piece capture;
@@ -27,6 +32,7 @@ namespace lc {
                 Rook,
                 EnPassant>;
 
+        private:
         Position from_pos;
         Position to_pos;
         MoveKind kind;
@@ -44,6 +50,8 @@ namespace lc {
 
         constexpr Position from() const { return from_pos; }
         constexpr Position to() const { return to_pos; }
+        template<typename ...F>
+        constexpr void visit(F&&...);
 
         private:
         constexpr Move(Position&& _from, Position&& _to, MoveKind&& _kind)
@@ -123,5 +131,10 @@ namespace lc {
             to,
             Move::EnPassant{}
         );
+    }
+
+    template<typename ...F>
+    constexpr void Move::visit(F&&... visitors) {
+        std::visit(overloaded{ std::forward<F>(visitors)... }, kind);
     }
 }

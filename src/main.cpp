@@ -59,4 +59,17 @@ int main() {
     fmt::print("{}\n", game.move({4,6}, {4,4}));
 
     board_render(board1);
+
+    auto move1 = Move::en_passant({0,0},{0,0});
+    move1.visit(
+        [](Move::Normal arg){
+            fmt::print("Normal\n");
+        },
+        [](auto arg){
+            fmt::print("Otherwise\n");
+        }
+    );
+
+    // TODO: Change Move::Rook to Move::Castle!!!!
+    
 }

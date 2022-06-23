@@ -2,6 +2,20 @@
     files = {
         [[src\main.cpp]]
     },
+    values = {
+        [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.31.31103\bin\HostX64\x64\cl.exe]],
+        {
+            "/EHsc",
+            "-nologo",
+            "-W4",
+            "-Ox",
+            "-fp:fast",
+            "-std:c++20",
+            "-Iinclude",
+            "-external:W0",
+            [[-external:IC:\Users\KillByte\AppData\Local\.xmake\packages\f\fmt\8.1.1\3c4518782925487388553bdb3459c51d\include]]
+        }
+    },
     depfiles_cl_json = "{\
     \"Version\": \"1.1\",\
     \"Data\": {\
@@ -103,19 +117,5 @@
         \"ImportedModules\": [],\
         \"ImportedHeaderUnits\": []\
     }\
-}",
-    values = {
-        [[C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.31.31103\bin\HostX64\x64\cl.exe]],
-        {
-            "/EHsc",
-            "-nologo",
-            "-W4",
-            "-Ox",
-            "-fp:fast",
-            "-std:c++20",
-            "-Iinclude",
-            "-external:W0",
-            [[-external:IC:\Users\KillByte\AppData\Local\.xmake\packages\f\fmt\8.1.1\3c4518782925487388553bdb3459c51d\include]]
-        }
-    }
+}"
 }
