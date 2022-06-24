@@ -19,12 +19,15 @@ void apply_move(lc::Board& board, const std::optional<lc::Move>& move_opt) {
         auto move = *move_opt;
         move.visit(
             [&](lc::Move::Normal arg) {
+                fmt::print("{},{}\n", move.to()[0], move.to()[1]);
                 board.set(move.to(), board.at(move.from()));
                 board.set(move.from(), arg.capture);
+                fmt::print("Normal\n");
             },
             [&](lc::Move::Promotion arg) {
                 board.set(move.to(), arg.to);
                 board.set(move.from(), arg.capture);
+                fmt::print("Promotion\n");
             },
             [&](lc::Move::Rook arg) {
                 board.set(move.to(), board.at(move.from()));
@@ -53,16 +56,20 @@ void apply_move(lc::Board& board, const std::optional<lc::Move>& move_opt) {
                     board.set(lc::Position{3,0}, board.at(rook_pos));
                     board.set(rook_pos, NONE);
                 }
+                fmt::print("Castling\n");
             },
             [&](lc::Move::EnPassant arg) {
                 // Right En Passant
                 board.set(move.to(), board.at(move.from()));
                 board.set(move.from(), NONE);
                 board.set({move.to()[0],move.from()[1]}, NONE);
+                fmt::print("En Passant\n");
             }
         );
     }
-
+    else {
+        fmt::print("There's no move\n");
+    }
 }
 
 namespace lc {
@@ -88,58 +95,60 @@ namespace lc {
             }
         };
 
+        std::optional<Move> move_opt = std::nullopt;
         const Piece piece = board.at(from);
         // TODO: check turn color
+        // In case piece is None or move is invalid
         switch (piece.kind()) {
             case PAWN: {
-                
+                // Retrieve last move, needed to check for~
+                // en passant move possibility
                 auto last_move = move_history.empty()
                     	? std::nullopt
                         : static_cast<std::optional<Move>>(move_history.back());
+                // Retrieve pawn possible moveset
                 auto possible_moves = pawn_moves(board, piece, from, last_move);
-                auto move_opt = get_move(possible_moves, to);
-                apply_move(board, move_opt);
-
-                return move_opt.has_value();
+                move_opt = get_move(possible_moves, to);
+                break;
             }
             case KNIGHT: {
+                // Retrieve knight possible moveset
                 auto possible_moves = knight_moves(board, piece, from);
-                auto move_opt = get_move(possible_moves, to);
-                apply_move(board, move_opt);
-
-                return move_opt.has_value();
+                move_opt = get_move(possible_moves, to);
+                break;
             }
             case BISHOP: {
+                // Retrieve bishop possible moveset
                 auto possible_moves = bishop_moves(board, piece, from);
-                auto move_opt = get_move(possible_moves, to);
-                apply_move(board, move_opt);
-
-                return move_opt.has_value();
+                move_opt = get_move(possible_moves, to);
+                break;
             }
             case ROOK: {
+                // Retrieve rook possible moveset
                 auto possible_moves = rook_moves(board, piece, from);
-                auto move_opt = get_move(possible_moves, to);
-                apply_move(board, move_opt);
-
-                return move_opt.has_value();
+                move_opt = get_move(possible_moves, to);
+                break;
             }
             case QUEEN: {
+                // Retrieve queen possible moveset
                 auto possible_moves = queen_moves(board, piece, from);
-                auto move_opt = get_move(possible_moves, to);
-                apply_move(board, move_opt);
-
-                return move_opt.has_value();
+                move_opt = get_move(possible_moves, to);
+                break;
             }
             case KING: {
                 auto possible_moves = king_moves(board, piece, from);
-                auto move_opt = get_move(possible_moves, to);
-                apply_move(board, move_opt);
-
-                return move_opt.has_value();
+                move_opt = get_move(possible_moves, to);
+                break;
             }
         }
-        // In case piece is None or move is invalid
-        fmt::print("ENd\n");
-        return false;
+
+        if(move_opt.has_value()) {
+            auto move = *move_opt;
+            // Apply move if exists, to board
+            apply_move(board, move);
+            // Add move to move history
+            move_history.push_back(move);
+        }
+        return move_opt.has_value();
     }
 }

@@ -39,36 +39,27 @@ void board_render(const lc::Board& b) {
 
 int main() {
     using namespace lc;
-    auto board1 = Board::standard();
-    // auto board2 = Board({
-    //     0x0c0a0b0e0d0b0a0c,
-    //     0x0909090909090909,
-    //     0x0000000000000000,
-    //     0x0000000000000000,
-    //     0x0000000000000000,
-    //     0x0000000000000000,
-    //     0x0101010101010101,
-    //     0x0402030605030204
-    // });
-    // auto board3 = Board::empty();
+    // auto board = Board::standard();
+    auto board = Board({
+        0x0c0a0b0e0d0b0a0c,
+        0x0909090909090909,
+        0x0000000000000000,
+        0x0000000100000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0101010001010101,
+        0x0402030605030204
+    });
 
-    // board1.set({3,3}, pawn(BLACK));
+    auto game = ChessGame(board);
+    
+    // Black pawn first double move
+    game.move({5,1}, {5,3});
+    // White pawn En passant
+    game.move({4,3}, {5,2});
 
-    auto game = ChessGame(board1);
-    // e2 to e4
-    fmt::print("{}\n", game.move({4,6}, {4,4}));
+    board_render(game.board);
 
-    board_render(board1);
-
-    auto move1 = Move::en_passant({0,0},{0,0});
-    move1.visit(
-        [](Move::Normal arg){
-            fmt::print("Normal\n");
-        },
-        [](auto arg){
-            fmt::print("Otherwise\n");
-        }
-    );
 
     // TODO: Change Move::Rook to Move::Castle!!!!
     

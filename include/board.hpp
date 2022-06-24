@@ -9,7 +9,7 @@ namespace lc {
     using Position = std::array<uint8_t,2>;
 
     class Board {
-        private:
+        public:
         std::array<uint64_t,8> board_data;
         
         public:
@@ -31,6 +31,8 @@ namespace lc {
 }
 
 /////////////// Implementation ///////////////
+
+#include <fmt/core.h>
 
 namespace lc {
     constexpr Board Board::standard() {
@@ -71,9 +73,9 @@ namespace lc {
         // TODO: Bounds check error handling
         assert(pos[0] < 8 && pos[1] < 8);
         // Impl 1: Faster
-        uint64_t mask = ~(0xff << (pos[0]*8));
+        uint64_t mask = ~(uint64_t(0xff) << (pos[0]*8));
         board_data[pos[1]] &= mask;
-        board_data[pos[1]] |= (piece.raw() << (pos[0]*8));
+        board_data[pos[1]] |= (uint64_t(piece.raw()) << (pos[0]*8));
         
         // Impl 2:
         // auto sub = board_data[pos[1]] >> (pos[0]*8);
