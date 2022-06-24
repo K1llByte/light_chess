@@ -37,6 +37,41 @@ void board_render(const lc::Board& b) {
     fmt::print("   +---+---+---+---+---+---+---+---+\n     a   b   c   d   e   f   g   h\n");
 }
 
+void board_render_with_moveset(const lc::ChessGame& game, const lc::Position& pos) {
+    const auto& b = game.board;
+    static const char repr[7] = { ' ', 'p', 'k', 'b', 'R', 'Q', 'K' };
+    for(uint8_t i = 0 ; i < 8 ; ++i)
+    {
+        fmt::print("   +---+---+---+---+---+---+---+---+\n");
+        fmt::print(" {} ", 8 - i);
+
+        auto moveset = game.piece_moveset(pos);
+        for(uint8_t j = 0 ; j < 8 ; ++j)
+        {
+            const lc::Position current_pos = {j,i};
+            const lc::Piece tmp = b.at(current_pos);
+
+            bool is_move_position = false;
+            for(const auto& move : moveset) {
+                if(move.to() == current_pos) {
+                    fmt::print("| \033[33mo\033[0m ");
+                    is_move_position = true;
+                    break;
+                }
+            }
+
+            if(!is_move_position) {
+                if(tmp.color())
+                    fmt::print("| \033[34m{}\033[0m ", repr[tmp.kind()]);
+                else
+                    fmt::print("| \033[31m{}\033[0m ", repr[tmp.kind()]);
+            }
+    }
+        fmt::print("|\n");
+    }
+    fmt::print("   +---+---+---+---+---+---+---+---+\n     a   b   c   d   e   f   g   h\n");
+}
+
 int main() {
     using namespace lc;
     // auto board = Board::standard();
@@ -56,11 +91,12 @@ int main() {
     // Black pawn first double move
     game.move({5,1}, {5,3});
     // White pawn En passant
-    game.move({4,3}, {5,2});
+    // game.move({4,3}, {5,2});
 
-    board_render(game.board);
+    board_render_with_moveset(game.board, {4,3});
 
-
-    // TODO: Change Move::Rook to Move::Castle!!!!
-    
+    // auto moveset = game.piece_moveset({4,3});
+    // for(const auto& move : moveset) {
+    //     fmt::print("({},{})\n", move.to()[0], move.to()[1]);
+    // }
 }

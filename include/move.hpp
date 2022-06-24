@@ -21,7 +21,7 @@ namespace lc {
             Piece to;
             Piece capture;
         };
-        struct Rook {};
+        struct Castling {};
         // Is capture (opponent pawn)
         struct EnPassant {};
 
@@ -29,7 +29,7 @@ namespace lc {
             std::variant<
                 Normal,
                 Promotion,
-                Rook,
+                Castling,
                 EnPassant>;
 
         private:
@@ -40,12 +40,12 @@ namespace lc {
         public:
         static constexpr Move normal(Position&& from, Position&& to, Piece capture = NONE);
         static constexpr Move promotion(Position&& from, Position&& to, const Piece& promotion, Piece capture = NONE);
-        static constexpr Move rook(Position&& from, Position&& to);
+        static constexpr Move castling(Position&& from, Position&& to);
         static constexpr Move en_passant(Position&& from, Position&& to);
 
         static constexpr Move normal(const Position& from, const Position& to, Piece capture = NONE);
         static constexpr Move promotion(const Position& from, const Position& to, const Piece& promotion, Piece capture = NONE);
-        static constexpr Move rook(const Position& from, const Position& to);
+        static constexpr Move castling(const Position& from, const Position& to);
         static constexpr Move en_passant(const Position& from, const Position& to);
 
         constexpr Position from() const { return from_pos; }
@@ -84,11 +84,11 @@ namespace lc {
         );
     }
 
-    constexpr Move Move::rook(Position&& from, Position&& to) {
+    constexpr Move Move::castling(Position&& from, Position&& to) {
         return Move(
             std::forward<Position>(from),
             std::forward<Position>(to),
-            Move::Rook{}
+            Move::Castling{}
         );
     }
 
@@ -117,11 +117,11 @@ namespace lc {
         );
     }
 
-    constexpr Move Move::rook(const Position& from, const Position& to) {
+    constexpr Move Move::castling(const Position& from, const Position& to) {
         return Move(
             from,
             to,
-            Move::Rook{}
+            Move::Castling{}
         );
     }
 

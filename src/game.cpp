@@ -29,7 +29,7 @@ void apply_move(lc::Board& board, const std::optional<lc::Move>& move_opt) {
                 board.set(move.from(), arg.capture);
                 fmt::print("Promotion\n");
             },
-            [&](lc::Move::Rook arg) {
+            [&](lc::Move::Castling arg) {
                 board.set(move.to(), board.at(move.from()));
                 board.set(move.from(), NONE);
                 // White kingside castling
@@ -81,7 +81,6 @@ namespace lc {
     }
 
     bool ChessGame::move(const Position& from, const Position& to) {
-        // TODO: Should be static
         static const int8_t info_bits[2][3] = {
             { 
                 WHITE_LONG_ROOK_MOVED_BIT , 
@@ -150,5 +149,38 @@ namespace lc {
             move_history.push_back(move);
         }
         return move_opt.has_value();
+    }
+
+    std::vector<Move> ChessGame::piece_moveset(const Position& pos) const {
+        const auto piece = board.at(pos);
+        switch (piece.kind())
+        {
+            case PAWN: {
+                auto last_move = move_history.empty()
+                    ? std::nullopt
+                    : static_cast<std::optional<Move>>(move_history.back());
+                return pawn_moves(board, piece, pos, last_move);
+            }
+            case KNIGHT: {
+                // Retrieve knight possible moveset
+                return knight_moves(board, piece, pos);
+            }
+            case BISHOP: {
+                // Retrieve bishop possible moveset
+                return bishop_moves(board, piece, pos);
+            }
+            case ROOK: {
+                // Retrieve rook possible moveset
+                return rook_moves(board, piece, pos);
+            }
+            case QUEEN: {
+                // Retrieve queen possible moveset
+                return queen_moves(board, piece, pos);
+            }
+            case KING: {
+                return king_moves(board, piece, pos);
+            }
+        }
+        return {};
     }
 }

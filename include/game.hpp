@@ -18,7 +18,7 @@ namespace lc {
         // Game state (turn color, ...)
         uint8_t           state;
         std::vector<Move> move_history;
-        
+
         public:
         Board             board;
 
@@ -29,5 +29,8 @@ namespace lc {
         bool move(const Position&, const Position&);
         // TODO:
         constexpr void undo();
+
+        std::vector<Move> piece_moveset(const Position&) const;
+
     };
 }

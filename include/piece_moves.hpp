@@ -8,9 +8,6 @@
 
 #define IN_BOUNDS(pos) pos[0] <= 7 && pos[1] <= 7
 
-// TODO: Remove
-#include <fmt/core.h>
-
 namespace lc {
     using PositionDiff = std::array<int8_t,2>;
     inline PositionDiff position_diff(
