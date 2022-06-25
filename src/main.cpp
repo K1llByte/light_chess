@@ -56,7 +56,6 @@ void board_render_with_moveset(const lc::ChessGame& game, const lc::Position& po
                 if(move.to() == current_pos) {
                     fmt::print("| \033[33mo\033[0m ");
                     is_move_position = true;
-                    break;
                 }
             }
 
@@ -75,27 +74,36 @@ void board_render_with_moveset(const lc::ChessGame& game, const lc::Position& po
 int main() {
     using namespace lc;
     // auto board = Board::standard();
+    // auto board = Board({
+    //     0x0c0a0b0e0d0b0a0c,
+    //     0x0909090909090909,
+    //     0x0000000000000000,
+    //     0x0000000100000000,
+    //     0x0000000000000000,
+    //     0x0000000000000000,
+    //     0x0101010001010101,
+    //     0x0402030605030204
+    // });
+
     auto board = Board({
-        0x0c0a0b0e0d0b0a0c,
-        0x0909090909090909,
+        0x0009000900000000,
+        0x0000010000000000,
         0x0000000000000000,
-        0x0000000100000000,
+        0x0000000000000909,
         0x0000000000000000,
         0x0000000000000000,
-        0x0101010001010101,
-        0x0402030605030204
+        0x0000000000000000,
+        0x0000030600000004
     });
 
     auto game = ChessGame(board);
     
-    // Black pawn first double move
-    game.move({5,1}, {5,3});
-    // White pawn En passant
-    // game.move({4,3}, {5,2});
+    //game.move({5,1}, {4,0});
 
-    board_render_with_moveset(game.board, {4,3});
+    board_render_with_moveset(game, {0,7});
+    board_render(game.board);
 
-    // auto moveset = game.piece_moveset({4,3});
+    // auto moveset = game.piece_moveset({5,7});
     // for(const auto& move : moveset) {
     //     fmt::print("({},{})\n", move.to()[0], move.to()[1]);
     // }

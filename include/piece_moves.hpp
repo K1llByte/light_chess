@@ -6,7 +6,7 @@
 
 #include "move.hpp"
 
-#define IN_BOUNDS(pos) pos[0] <= 7 && pos[1] <= 7
+#define IN_BOUNDS(pos) (pos[0] <= 7 && pos[1] <= 7)
 
 namespace lc {
     using PositionDiff = std::array<int8_t,2>;
@@ -66,7 +66,6 @@ namespace lc {
         // Only in pawn the direction of the moveset matters
         const int8_t direction = piece.is_white() ? -1 : 1;
         // Normal
-        
         {
             const auto to = Position{from[0], uint8_t(from[1] + direction)};
             
@@ -89,7 +88,7 @@ namespace lc {
             // Position to1 is valid and has no pieces
             if(IN_BOUNDS(to1) && board.at(to1).kind() == NONE
             // Position to2 is valid and has no pieces
-                && IN_BOUNDS(to1) && board.at(to2).kind() == NONE
+                && IN_BOUNDS(to2) && board.at(to2).kind() == NONE
             // Is first move of piece
                 && ((piece.is_white() && from[1] == 6)
                     || (piece.is_black() && from[1] == 1)))
@@ -189,6 +188,38 @@ namespace lc {
         const Position& pos)
     {
         std::vector<Move> moves;
+        auto diagonal_check = [&](int8_t x_dir, int8_t y_dir) {
+            Piece to_piece = NONE;
+            for(int8_t i = 1; i < 8; ++i) {
+                auto to = Position{
+                    uint8_t(pos[0]+(i*x_dir)),
+                    uint8_t(pos[1]+(i*y_dir))
+                };
+                if(!IN_BOUNDS(to))
+                    break;
+                to_piece = board.at(to);
+                if(to_piece.kind() == NONE) {
+                    moves.emplace_back(Move::normal(pos, to));
+                }
+                else if(to_piece.color() != piece.color()) {
+                    moves.emplace_back(Move::normal(pos, to));
+                    break;
+                }
+                else {
+                    break;
+                }
+            }
+        };
+        
+        // North East
+        diagonal_check(1,-1);
+        // North West
+        diagonal_check(-1,-1);
+        // South East
+        diagonal_check(1,1);
+        // South West
+        diagonal_check(-1,1);
+
         return moves;
     }
 
@@ -198,6 +229,38 @@ namespace lc {
         const Position& pos)
     {
         std::vector<Move> moves;
+        auto diagonal_check = [&](int8_t x_dir, int8_t y_dir) {
+            Piece to_piece = NONE;
+            for(int8_t i = 1; i < 8; ++i) {
+                auto to = Position{
+                    uint8_t(pos[0]+(i*x_dir)),
+                    uint8_t(pos[1]+(i*y_dir))
+                };
+                if(!IN_BOUNDS(to))
+                    break;
+                to_piece = board.at(to);
+                if(to_piece.kind() == NONE) {
+                    moves.emplace_back(Move::normal(pos, to));
+                }
+                else if(to_piece.color() != piece.color()) {
+                    moves.emplace_back(Move::normal(pos, to));
+                    break;
+                }
+                else {
+                    break;
+                }
+            }
+        };
+        
+        // North
+        diagonal_check(0,-1);
+        // South
+        diagonal_check(0,1);
+        // East
+        diagonal_check(1,0);
+        // West
+        diagonal_check(-1,0);
+
         return moves;
     }
 

@@ -23,7 +23,7 @@ namespace lc {
         Board             board;
 
         public:
-        ChessGame(const Board& _board);
+        explicit ChessGame(const Board& _board);
         
         // TODO:
         bool move(const Position&, const Position&);

@@ -14,62 +14,54 @@ std::optional<lc::Move> get_move(
     return std::nullopt;
 }
 
-void apply_move(lc::Board& board, const std::optional<lc::Move>& move_opt) {
-    if(move_opt.has_value()) {
-        auto move = *move_opt;
-        move.visit(
-            [&](lc::Move::Normal arg) {
-                fmt::print("{},{}\n", move.to()[0], move.to()[1]);
-                board.set(move.to(), board.at(move.from()));
-                board.set(move.from(), arg.capture);
-                fmt::print("Normal\n");
-            },
-            [&](lc::Move::Promotion arg) {
-                board.set(move.to(), arg.to);
-                board.set(move.from(), arg.capture);
-                fmt::print("Promotion\n");
-            },
-            [&](lc::Move::Castling arg) {
-                board.set(move.to(), board.at(move.from()));
-                board.set(move.from(), NONE);
-                // White kingside castling
-                // White queenside castling
-                // Black kingside castling
-                // Black queenside castling
-                if(move.to() == lc::Position{6,7}) {
-                    const lc::Position rook_pos = {7,7};
-                    board.set(lc::Position{5,7}, board.at(rook_pos));
-                    board.set(rook_pos, NONE);
-                }
-                else if(move.to() == lc::Position{6,7}) {
-                    const lc::Position rook_pos = {0,7};
-                    board.set(lc::Position{3,7}, board.at(rook_pos));
-                    board.set(rook_pos, NONE);
-                }
-                else if(move.to() == lc::Position{6,7}) {
-                    const lc::Position rook_pos = {7,0};
-                    board.set(lc::Position{5,0}, board.at(rook_pos));
-                    board.set(rook_pos, NONE);
-                }
-                else if(move.to() == lc::Position{6,7}) {
-                    const lc::Position rook_pos = {0,0};
-                    board.set(lc::Position{3,0}, board.at(rook_pos));
-                    board.set(rook_pos, NONE);
-                }
-                fmt::print("Castling\n");
-            },
-            [&](lc::Move::EnPassant arg) {
-                // Right En Passant
-                board.set(move.to(), board.at(move.from()));
-                board.set(move.from(), NONE);
-                board.set({move.to()[0],move.from()[1]}, NONE);
-                fmt::print("En Passant\n");
+void apply_move(lc::Board& board, lc::Move& move) {
+    move.visit(
+        [&](lc::Move::Normal arg) {
+            board.set(move.to(), board.at(move.from()));
+            board.set(move.from(), NONE);
+            fmt::print("Normal\n");
+        },
+        [&](lc::Move::Promotion arg) {
+            board.set(move.to(), arg.to);
+            board.set(move.from(), NONE);
+            fmt::print("Promotion\n");
+        },
+        [&](lc::Move::Castling arg) {
+            board.set(move.to(), board.at(move.from()));
+            board.set(move.from(), NONE);
+            // White kingside castling
+            if(move.to() == lc::Position{6,7}) {
+                const lc::Position rook_pos = {7,7};
+                board.set(lc::Position{5,7}, board.at(rook_pos));
+                board.set(rook_pos, NONE);
             }
-        );
-    }
-    else {
-        fmt::print("There's no move\n");
-    }
+            // White queenside castling
+            else if(move.to() == lc::Position{6,7}) {
+                const lc::Position rook_pos = {0,7};
+                board.set(lc::Position{3,7}, board.at(rook_pos));
+                board.set(rook_pos, NONE);
+            }
+            // Black kingside castling
+            else if(move.to() == lc::Position{6,7}) {
+                const lc::Position rook_pos = {7,0};
+                board.set(lc::Position{5,0}, board.at(rook_pos));
+                board.set(rook_pos, NONE);
+            }
+            // Black queenside castling
+            else if(move.to() == lc::Position{6,7}) {
+                const lc::Position rook_pos = {0,0};
+                board.set(lc::Position{3,0}, board.at(rook_pos));
+                board.set(rook_pos, NONE);
+            }
+            fmt::print("Castling\n");
+        },
+        [&](lc::Move::EnPassant arg) {
+            board.set(move.to(), board.at(move.from()));
+            board.set(move.from(), NONE);
+            board.set({move.to()[0],move.from()[1]}, NONE);
+            fmt::print("En Passant\n");
+        }
+    );
 }
 
 namespace lc {
@@ -135,6 +127,7 @@ namespace lc {
                 break;
             }
             case KING: {
+                // Retrieve king possible moveset
                 auto possible_moves = king_moves(board, piece, from);
                 move_opt = get_move(possible_moves, to);
                 break;
@@ -147,6 +140,9 @@ namespace lc {
             apply_move(board, move);
             // Add move to move history
             move_history.push_back(move);
+        }
+        else {
+            fmt::print("Invalid move\n");
         }
         return move_opt.has_value();
     }
@@ -178,6 +174,7 @@ namespace lc {
                 return queen_moves(board, piece, pos);
             }
             case KING: {
+                // Retrieve king possible moveset
                 return king_moves(board, piece, pos);
             }
         }
