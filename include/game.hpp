@@ -5,10 +5,14 @@
 
 #include "move.hpp"
 
+// Extends bits from piece_moves.hpp
+#define TURN_COLOR_BIT 0b1000000
+
 namespace lc {
     class ChessGame {   
         private:
         // Game state (turn color, ...)
+        bool              free_game;
         uint8_t           state;
         std::vector<Move> move_history;
 
@@ -16,10 +20,9 @@ namespace lc {
         Board             board;
 
         public:
-        explicit ChessGame(const Board& _board);
-        explicit ChessGame(Board&& _board);
+        explicit ChessGame(const Board& _board, bool _free_game = false);
+        explicit ChessGame(Board&& _board, bool _free_game = false);
         
-        // TODO:
         bool move(const Position&, const Position&);
         // TODO:
         bool undo();

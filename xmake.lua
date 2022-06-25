@@ -17,5 +17,4 @@ target("light_chess")
     add_packages("fmt")
     -- Binary
     set_kind("binary")
-    add_files("src/game.cpp")
-    add_files("src/main.cpp")
+    add_files("src/**.cpp")

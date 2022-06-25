@@ -72,8 +72,12 @@ void board_render_with_moveset(const lc::ChessGame& game, const lc::Position& po
 }
 
 int main() {
+    // TODO: undo function
+    // TODO: Terminal user interface
+    // TODO: is_check function
+
     using namespace lc;
-    // auto board = Board::standard();
+    auto board = Board::standard();
     // auto board = Board({
     //     0x0c0a0b0e0d0b0a0c,
     //     0x0909090909090909,
@@ -85,23 +89,29 @@ int main() {
     //     0x0402030605030204
     // });
 
-    auto board = Board({
-        0x0009000900000000,
-        0x0000010000000000,
-        0x0000000000000000,
-        0x0000000000000909,
-        0x0000000000000000,
-        0x0000000000000000,
-        0x0000000005000000,
-        0x0400000600000004 // 0x0002030600000004
-    });
+    // auto board = Board({
+    //     0x0009000900000000,
+    //     0x0000010000000000,
+    //     0x0000000000000000,
+    //     0x0000000000000909,
+    //     0x0000000000000000,
+    //     0x0000000000000000,
+    //     0x0000000005000000,
+    //     0x0400000600000004 // 0x0002030600000004
+    // });
 
-    auto game = ChessGame(std::move(board));
+    auto game = ChessGame(std::move(board), true);
 
-    // game.move({4,7}, {2,7});
+    game.move({4,6}, {4,4});
+    // game.move({4,1}, {4,3});
+    game.move({4,4}, {4,3});
+    game.move({4,3}, {4,2});
+    game.move({4,2}, {3,1});
+    // game.move({3,1}, {2,0});
+    
 
-    board_render_with_moveset(game, {4,7});
     board_render(game.board);
+    board_render_with_moveset(game, {3,1});
 
     // auto moveset = game.piece_moveset({5,7});
     // for(const auto& move : moveset) {

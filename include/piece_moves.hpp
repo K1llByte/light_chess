@@ -386,18 +386,14 @@ namespace lc {
             if(!(state & info_bits[color][1])) {
                 bool between_empty = true;
                 if(!(state & info_bits[color][0])) {
-                    fmt::print("Left rook didnt move\n");
                     // Check if positions in between have no pieces
                     for(int8_t i = 1; i < 4 && between_empty; ++i) {
                         auto to = Position{
                             uint8_t(pos[0] - i),
                             pos[1]
                         };
-                        fmt::print("{},{}\n", to[0],to[1]);
                         between_empty = board.at(to).kind() == NONE;
-                        fmt::print("i: {}, between_empty: {}\n", i, between_empty);
                     }
-                    fmt::print("between_empty: {}\n", between_empty);
                     // If yes 
                     if(between_empty) {
                         moves.emplace_back(Move::castling(pos, {uint8_t(pos[0]-2), pos[1]}));
@@ -411,12 +407,9 @@ namespace lc {
                             uint8_t(pos[0] + i),
                             pos[1]
                         };
-                        fmt::print("i: {}, between_empty: {}\n", i, between_empty);
                         between_empty = board.at(to).kind() == NONE;
-                        fmt::print("i: {}, between_empty: {}\n", i, between_empty);
                     }
                     // If yes 
-                    fmt::print("between_empty: {}\n", between_empty);
                     if(between_empty) {
                         moves.emplace_back(Move::castling(pos, {uint8_t(pos[0]+2), pos[1]}));
                     }
