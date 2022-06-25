@@ -188,7 +188,7 @@ namespace lc {
         const Position& pos)
     {
         std::vector<Move> moves;
-        auto diagonal_check = [&](int8_t x_dir, int8_t y_dir) {
+        auto diretional_check = [&](int8_t x_dir, int8_t y_dir) {
             Piece to_piece = NONE;
             for(int8_t i = 1; i < 8; ++i) {
                 auto to = Position{
@@ -212,13 +212,13 @@ namespace lc {
         };
         
         // North East
-        diagonal_check(1,-1);
+        diretional_check(1,-1);
         // North West
-        diagonal_check(-1,-1);
+        diretional_check(-1,-1);
         // South East
-        diagonal_check(1,1);
+        diretional_check(1,1);
         // South West
-        diagonal_check(-1,1);
+        diretional_check(-1,1);
 
         return moves;
     }
@@ -229,7 +229,7 @@ namespace lc {
         const Position& pos)
     {
         std::vector<Move> moves;
-        auto diagonal_check = [&](int8_t x_dir, int8_t y_dir) {
+        auto diretional_check = [&](int8_t x_dir, int8_t y_dir) {
             Piece to_piece = NONE;
             for(int8_t i = 1; i < 8; ++i) {
                 auto to = Position{
@@ -253,13 +253,13 @@ namespace lc {
         };
         
         // North
-        diagonal_check(0,-1);
+        diretional_check(0,-1);
         // South
-        diagonal_check(0,1);
+        diretional_check(0,1);
         // East
-        diagonal_check(1,0);
+        diretional_check(1,0);
         // West
-        diagonal_check(-1,0);
+        diretional_check(-1,0);
 
         return moves;
     }
@@ -270,6 +270,46 @@ namespace lc {
         const Position& pos)
     {
         std::vector<Move> moves;
+        auto diretional_check = [&](int8_t x_dir, int8_t y_dir) {
+            Piece to_piece = NONE;
+            for(int8_t i = 1; i < 8; ++i) {
+                auto to = Position{
+                    uint8_t(pos[0]+(i*x_dir)),
+                    uint8_t(pos[1]+(i*y_dir))
+                };
+                if(!IN_BOUNDS(to))
+                    break;
+                to_piece = board.at(to);
+                if(to_piece.kind() == NONE) {
+                    moves.emplace_back(Move::normal(pos, to));
+                }
+                else if(to_piece.color() != piece.color()) {
+                    moves.emplace_back(Move::normal(pos, to));
+                    break;
+                }
+                else {
+                    break;
+                }
+            }
+        };
+        
+        // North
+        diretional_check(0,-1);
+        // South
+        diretional_check(0,1);
+        // East
+        diretional_check(1,0);
+        // West
+        diretional_check(-1,0);
+        // North East
+        diretional_check(1,-1);
+        // North West
+        diretional_check(-1,-1);
+        // South East
+        diretional_check(1,1);
+        // South West
+        diretional_check(-1,1);
+
         return moves;
     }
 

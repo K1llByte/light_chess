@@ -92,7 +92,7 @@ int main() {
         0x0000000000000909,
         0x0000000000000000,
         0x0000000000000000,
-        0x0000000000000000,
+        0x0000000005000000,
         0x0000030600000004
     });
 
@@ -100,7 +100,7 @@ int main() {
     
     //game.move({5,1}, {4,0});
 
-    board_render_with_moveset(game, {0,7});
+    board_render_with_moveset(game, {3,6});
     board_render(game.board);
 
     // auto moveset = game.piece_moveset({5,7});
