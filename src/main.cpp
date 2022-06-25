@@ -40,12 +40,12 @@ void board_render(const lc::Board& b) {
 void board_render_with_moveset(const lc::ChessGame& game, const lc::Position& pos) {
     const auto& b = game.board;
     static const char repr[7] = { ' ', 'p', 'k', 'b', 'R', 'Q', 'K' };
+    auto moveset = game.piece_moveset(pos);
     for(uint8_t i = 0 ; i < 8 ; ++i)
     {
         fmt::print("   +---+---+---+---+---+---+---+---+\n");
         fmt::print(" {} ", 8 - i);
 
-        auto moveset = game.piece_moveset(pos);
         for(uint8_t j = 0 ; j < 8 ; ++j)
         {
             const lc::Position current_pos = {j,i};
@@ -93,14 +93,14 @@ int main() {
         0x0000000000000000,
         0x0000000000000000,
         0x0000000005000000,
-        0x0000030600000004
+        0x0400000600000004 // 0x0002030600000004
     });
 
     auto game = ChessGame(board);
     
-    //game.move({5,1}, {4,0});
+    // game.move({4,7}, {2,7});
 
-    board_render_with_moveset(game, {3,6});
+    board_render_with_moveset(game, {4,7});
     board_render(game.board);
 
     // auto moveset = game.piece_moveset({5,7});

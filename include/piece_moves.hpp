@@ -8,6 +8,13 @@
 
 #define IN_BOUNDS(pos) (pos[0] <= 7 && pos[1] <= 7)
 
+#define WHITE_KINGSIDE_ROOK_MOVED_BIT  0b000001
+#define WHITE_KING_MOVED_BIT           0b000010
+#define WHITE_QUEENSIDE_ROOK_MOVED_BIT 0b000100
+#define BLACK_KINGSIDE_ROOK_MOVED_BIT  0b001000
+#define BLACK_KING_MOVED_BIT           0b010000
+#define BLACK_QUEENSIDE_ROOK_MOVED_BIT 0b100000
+
 namespace lc {
     using PositionDiff = std::array<int8_t,2>;
     inline PositionDiff position_diff(
@@ -38,7 +45,8 @@ namespace lc {
     inline std::vector<Move> king_moves(
         const Board& board,
         const Piece& piece,
-        const Position& pos);
+        const Position& pos,
+        uint8_t state);
 }
 
 /////////////// Implementation ///////////////
@@ -179,6 +187,25 @@ namespace lc {
         const Position& pos)
     {
         std::vector<Move> moves;
+        static const std::array<int8_t,2> diffs[] = {
+            { 1, 2}, {-1,-2}, { 1,-2}, {-1, 2},
+            { 2, 1}, {-2,-1}, { 2,-1}, {-2, 1}
+        };
+
+        for(const auto& diff : diffs) {
+            auto to = Position{
+                uint8_t(pos[0]+diff[0]),
+                uint8_t(pos[1]+diff[1])
+            };
+            if(IN_BOUNDS(to)) {
+                auto to_piece = board.at(to);
+                if(to_piece.kind() == NONE
+                    || to_piece.color() != piece.color())
+                {
+                    moves.emplace_back(Move::normal(pos,to,to_piece));
+                }
+            }
+        }
         return moves;
     }
 
@@ -202,7 +229,7 @@ namespace lc {
                     moves.emplace_back(Move::normal(pos, to));
                 }
                 else if(to_piece.color() != piece.color()) {
-                    moves.emplace_back(Move::normal(pos, to));
+                    moves.emplace_back(Move::normal(pos, to, to_piece));
                     break;
                 }
                 else {
@@ -243,7 +270,7 @@ namespace lc {
                     moves.emplace_back(Move::normal(pos, to));
                 }
                 else if(to_piece.color() != piece.color()) {
-                    moves.emplace_back(Move::normal(pos, to));
+                    moves.emplace_back(Move::normal(pos, to, to_piece));
                     break;
                 }
                 else {
@@ -284,7 +311,7 @@ namespace lc {
                     moves.emplace_back(Move::normal(pos, to));
                 }
                 else if(to_piece.color() != piece.color()) {
-                    moves.emplace_back(Move::normal(pos, to));
+                    moves.emplace_back(Move::normal(pos, to, to_piece));
                     break;
                 }
                 else {
@@ -316,9 +343,86 @@ namespace lc {
     std::vector<Move> king_moves(
         const Board& board,
         const Piece& piece,
-        const Position& pos)
+        const Position& pos,
+        uint8_t state)
     {
         std::vector<Move> moves;
+        // Normal
+        static const std::array<int8_t,2> diffs[] = {
+            { 1, 0}, {-1, 0}, { 0,-1}, { 0, 1},
+            { 1, 1}, {-1,-1}, { 1,-1}, {-1, 1}
+        };
+        for(const auto& diff : diffs) {
+            auto to = Position{
+                uint8_t(pos[0]+diff[0]),
+                uint8_t(pos[1]+diff[1])
+            };
+            if(IN_BOUNDS(to)) {
+                auto to_piece = board.at(to);
+                if(to_piece.kind() == NONE
+                    || to_piece.color() != piece.color())
+                {
+                    moves.emplace_back(Move::normal(pos,to,to_piece));
+                }
+            }
+        }
+        // Castling
+        {
+            static const int8_t info_bits[2][3] = {
+                { 
+                    WHITE_QUEENSIDE_ROOK_MOVED_BIT , 
+                    WHITE_KING_MOVED_BIT      , 
+                    WHITE_KINGSIDE_ROOK_MOVED_BIT
+                },
+                { 
+                    BLACK_QUEENSIDE_ROOK_MOVED_BIT , 
+                    BLACK_KING_MOVED_BIT      , 
+                    BLACK_KINGSIDE_ROOK_MOVED_BIT 
+                }
+            };
+            
+            // TODO: Do this only if there's no check
+            auto color = piece.color();
+            if(!(state & info_bits[color][1])) {
+                bool between_empty = true;
+                if(!(state & info_bits[color][0])) {
+                    fmt::print("Left rook didnt move\n");
+                    // Check if positions in between have no pieces
+                    for(int8_t i = 1; i < 4 && between_empty; ++i) {
+                        auto to = Position{
+                            uint8_t(pos[0] - i),
+                            pos[1]
+                        };
+                        fmt::print("{},{}\n", to[0],to[1]);
+                        between_empty = board.at(to).kind() == NONE;
+                        fmt::print("i: {}, between_empty: {}\n", i, between_empty);
+                    }
+                    fmt::print("between_empty: {}\n", between_empty);
+                    // If yes 
+                    if(between_empty) {
+                        moves.emplace_back(Move::castling(pos, {uint8_t(pos[0]-2), pos[1]}));
+                    }
+                }
+                if(!(state & info_bits[color][2])) {
+                    between_empty = true;
+                    // Check if positions in between have no pieces
+                    for(int8_t i = 1; i < 3 && between_empty; ++i) {
+                        auto to = Position{
+                            uint8_t(pos[0] + i),
+                            pos[1]
+                        };
+                        fmt::print("i: {}, between_empty: {}\n", i, between_empty);
+                        between_empty = board.at(to).kind() == NONE;
+                        fmt::print("i: {}, between_empty: {}\n", i, between_empty);
+                    }
+                    // If yes 
+                    fmt::print("between_empty: {}\n", between_empty);
+                    if(between_empty) {
+                        moves.emplace_back(Move::castling(pos, {uint8_t(pos[0]+2), pos[1]}));
+                    }
+                }
+            }
+        }
         return moves;
     }
 }

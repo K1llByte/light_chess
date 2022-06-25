@@ -36,19 +36,19 @@ void apply_move(lc::Board& board, lc::Move& move) {
                 board.set(rook_pos, NONE);
             }
             // White queenside castling
-            else if(move.to() == lc::Position{6,7}) {
+            else if(move.to() == lc::Position{2,7}) {
                 const lc::Position rook_pos = {0,7};
                 board.set(lc::Position{3,7}, board.at(rook_pos));
                 board.set(rook_pos, NONE);
             }
             // Black kingside castling
-            else if(move.to() == lc::Position{6,7}) {
+            else if(move.to() == lc::Position{6,0}) {
                 const lc::Position rook_pos = {7,0};
                 board.set(lc::Position{5,0}, board.at(rook_pos));
                 board.set(rook_pos, NONE);
             }
             // Black queenside castling
-            else if(move.to() == lc::Position{6,7}) {
+            else if(move.to() == lc::Position{2,0}) {
                 const lc::Position rook_pos = {0,0};
                 board.set(lc::Position{3,0}, board.at(rook_pos));
                 board.set(rook_pos, NONE);
@@ -73,19 +73,6 @@ namespace lc {
     }
 
     bool ChessGame::move(const Position& from, const Position& to) {
-        static const int8_t info_bits[2][3] = {
-            { 
-                WHITE_LONG_ROOK_MOVED_BIT , 
-                WHITE_KING_MOVED_BIT      , 
-                WHITE_SHORT_ROOK_MOVED_BIT
-            },
-            { 
-                BLACK_LONG_ROOK_MOVED_BIT , 
-                BLACK_KING_MOVED_BIT      , 
-                BLACK_SHORT_ROOK_MOVED_BIT 
-            }
-        };
-
         std::optional<Move> move_opt = std::nullopt;
         const Piece piece = board.at(from);
         // TODO: check turn color
@@ -128,7 +115,7 @@ namespace lc {
             }
             case KING: {
                 // Retrieve king possible moveset
-                auto possible_moves = king_moves(board, piece, from);
+                auto possible_moves = king_moves(board, piece, from, state);
                 move_opt = get_move(possible_moves, to);
                 break;
             }
@@ -175,7 +162,7 @@ namespace lc {
             }
             case KING: {
                 // Retrieve king possible moveset
-                return king_moves(board, piece, pos);
+                return king_moves(board, piece, pos, state);
             }
         }
         return {};
