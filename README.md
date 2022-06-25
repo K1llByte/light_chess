@@ -1,7 +1,16 @@
 # light-chess
-A light chess engine made in C++
+A light chess is an hobby chess backend made in C++
 
 
-### Check validation algorithm
-Color passed as argument to check if the king with that color is in check
-For all opposite color pieces, verify of color king is in the capture positions
+<p float="left">
+    <img src="assets/preview2.png" width="200" />
+    <img src="assets/preview1.png" width="200" />
+</p>
+
+
+## TODO:
+
+- [ ] `undo` function
+- [ ] Terminal user interface
+- [ ] `is_check` function
+- [ ] Game and board serialization (load and save)

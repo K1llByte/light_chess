@@ -72,10 +72,6 @@ void board_render_with_moveset(const lc::ChessGame& game, const lc::Position& po
 }
 
 int main() {
-    // TODO: undo function
-    // TODO: Terminal user interface
-    // TODO: is_check function
-
     using namespace lc;
     auto board = Board::standard();
     // auto board = Board({
@@ -102,16 +98,11 @@ int main() {
 
     auto game = ChessGame(std::move(board), true);
 
-    game.move({4,6}, {4,4});
-    // game.move({4,1}, {4,3});
-    game.move({4,4}, {4,3});
-    game.move({4,3}, {4,2});
-    game.move({4,2}, {3,1});
     // game.move({3,1}, {2,0});
     
 
     board_render(game.board);
-    board_render_with_moveset(game, {3,1});
+    board_render_with_moveset(game, {4,6});
 
     // auto moveset = game.piece_moveset({5,7});
     // for(const auto& move : moveset) {
