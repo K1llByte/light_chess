@@ -17,11 +17,12 @@ namespace lc {
 
         public:
         explicit ChessGame(const Board& _board);
+        explicit ChessGame(Board&& _board);
         
         // TODO:
         bool move(const Position&, const Position&);
         // TODO:
-        constexpr void undo();
+        bool undo();
 
         std::vector<Move> piece_moveset(const Position&) const;
 

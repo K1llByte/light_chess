@@ -96,8 +96,8 @@ int main() {
         0x0400000600000004 // 0x0002030600000004
     });
 
-    auto game = ChessGame(board);
-    
+    auto game = ChessGame(std::move(board));
+
     // game.move({4,7}, {2,7});
 
     board_render_with_moveset(game, {4,7});

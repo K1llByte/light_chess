@@ -72,6 +72,13 @@ namespace lc {
         move_history.reserve(40);
     }
 
+    ChessGame::ChessGame(Board&& _board)
+        : board(std::move(_board))
+    {
+        // Average 2000-2800 elo games duration
+        move_history.reserve(40);
+    }
+
     bool ChessGame::move(const Position& from, const Position& to) {
         std::optional<Move> move_opt = std::nullopt;
         const Piece piece = board.at(from);
